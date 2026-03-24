@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LexAI – Contract Analysis System</title>
+  <meta name="description" content="Automatically extract key clauses, parties, dates and obligations from legal documents using NLP. Powered by spaCy and the CUAD dataset." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ═══════════════ NAVBAR ═══════════════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="#" class="logo" id="logo-link">
+      <span class="logo-icon">⚖️</span>
+      <span class="logo-text">Lex<span class="logo-accent">AI</span></span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#home" class="nav-link">Home</a></li>
+      <li><a href="#analyzer" class="nav-link">Analyzer</a></li>
+      <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
+      <li><a href="#sample-results" class="nav-link">Sample Results</a></li>
+      <li><a href="#tech-stack" class="nav-link">Tech Stack</a></li>
+      <li><a href="#analyzer" class="nav-cta">Try Analyzer</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero" id="home">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-container">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      NLP-Powered Legal Intelligence
+    </div>
+    <h1 class="hero-title">Contract Analysis<br /><em>System</em></h1>
+    <p class="hero-tagline">Automatically extract key clauses, parties, dates and obligations<br class="br-desktop" /> from legal documents using advanced NLP pipelines.</p>
+    <div class="hero-actions">
+      <a href="#analyzer" class="btn btn-primary" id="hero-analyze-btn">
+        <span>Analyze a Contract</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#sample-results" class="btn btn-outline" id="hero-sample-btn">View Sample Results</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-badge" id="stat-spacy">
+        <span class="stat-icon">🧠</span>
+        <span>spaCy NER</span>
+      </div>
+      <div class="stat-badge" id="stat-cuad">
+        <span class="stat-icon">📚</span>
+        <span>CUAD Dataset</span>
+      </div>
+      <div class="stat-badge" id="stat-clauses">
+        <span class="stat-icon">📋</span>
+        <span>8 Clause Types</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <span>Scroll to explore</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ═══════════════ ANALYZER ═══════════════ -->
+<section class="analyzer-section" id="analyzer">
+  <div class="section-container">
+    <div class="section-label">— Core Feature —</div>
+    <h2 class="section-title">Contract Analyzer</h2>
+    <p class="section-sub">Paste any contract text below and our NLP engine will extract structured clause information instantly.</p>
+
+    <div class="analyzer-card">
+      <div class="analyzer-input-area">
+        <label for="contract-input" class="input-label">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Paste Contract Text
+        </label>
+        <textarea id="contract-input" class="contract-textarea" placeholder="Paste your contract text here...&#10;&#10;Example:&#10;This Service Agreement is entered into as of January 1, 2025, between Acme Corp (hereinafter 'Client') and TechSolutions Inc (hereinafter 'Provider')...&#10;&#10;The Term of this Agreement shall commence on the Effective Date and continue for a period of 12 months...&#10;&#10;Payment: Client agrees to pay Provider $5,000 per month...&#10;&#10;This Agreement shall be governed by the laws of the State of New York...&#10;&#10;Confidentiality: Each party agrees to maintain in strict confidence all Confidential Information received from the other party...&#10;&#10;Either party may terminate this Agreement upon 30 days written notice..."></textarea>
+        <div class="input-footer">
+          <span class="char-count" id="char-count">0 characters</span>
+          <button class="btn btn-primary" id="analyze-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Analyze Contract
+          </button>
+        </div>
+      </div>
+
+      <div class="results-area" id="results-area" style="display:none;">
+        <div class="results-header">
+          <h3 class="results-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Extracted Clauses
+          </h3>
+          <span class="results-badge" id="clauses-found-badge">8 clause types analyzed</span>
+        </div>
+        <div class="clause-grid" id="clause-grid"></div>
+
+        <div class="entities-section">
+          <h4 class="entities-title">Named Entity Recognition (spaCy)</h4>
+          <div class="entities-grid" id="entities-grid"></div>
+        </div>
+      </div>
+
+      <div class="placeholder-state" id="placeholder-state">
+        <div class="placeholder-icon">📄</div>
+        <p>Paste a contract above and click <strong>Analyze Contract</strong> to see extracted clauses appear here.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ HOW IT WORKS ═══════════════ -->
+<section class="how-section" id="how-it-works">
+  <div class="section-container">
+    <div class="section-label">— Pipeline Overview —</div>
+    <h2 class="section-title">How It Works</h2>
+    <p class="section-sub">A four-stage NLP pipeline transforms raw legal text into structured, actionable intelligence.</p>
+    <div class="steps-wrapper">
+      <div class="steps-line"></div>
+      <div class="steps-grid">
+        <div class="step-card reveal" id="step-1">
+          <div class="step-number">01</div>
+          <div class="step-icon-wrap" style="background: var(--blue-soft);">
+            <span class="step-icon">📋</span>
+          </div>
+          <h3 class="step-title">Paste Contract Text</h3>
+          <p class="step-desc">User inputs raw contract text via the web interface. Supports agreements, NDAs, service contracts and more.</p>
+        </div>
+        <div class="step-card reveal" id="step-2">
+          <div class="step-number">02</div>
+          <div class="step-icon-wrap" style="background: var(--gold-soft);">
+            <span class="step-icon">🔍</span>
+          </div>
+          <h3 class="step-title">Regex Pattern Matching</h3>
+          <p class="step-desc">Domain-specific regular expressions scan for dates, monetary amounts, governing law clauses and other structured patterns.</p>
+        </div>
+        <div class="step-card reveal" id="step-3">
+          <div class="step-number">03</div>
+          <div class="step-icon-wrap" style="background: var(--purple-soft);">
+            <span class="step-icon">🧠</span>
+          </div>
+          <h3 class="step-title">spaCy NER Pipeline</h3>
+          <p class="step-desc">The <code>en_core_web_sm</code> model identifies Organizations (ORG), Dates (DATE), Money (MONEY), and Locations (GPE) in context.</p>
+        </div>
+        <div class="step-card reveal" id="step-4">
+          <div class="step-number">04</div>
+          <div class="step-icon-wrap" style="background: var(--teal-soft);">
+            <span class="step-icon">📊</span>
+          </div>
+          <h3 class="step-title">Structured Clause Output</h3>
+          <p class="step-desc">Results are compiled into 8 clause categories and displayed in a clean card grid with color-coded confidence indicators.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SAMPLE RESULTS ═══════════════ -->
+<section class="samples-section" id="sample-results">
+  <div class="section-container">
+    <div class="section-label">— Output Examples —</div>
+    <h2 class="section-title">Sample Results</h2>
+    <p class="section-sub">See how LexAI processes different contract types with real-world accuracy.</p>
+    <div class="samples-grid">
+      <!-- Card 1: Service Agreement -->
+      <div class="sample-card reveal" id="sample-card-1">
+        <div class="sample-card-header" style="background: linear-gradient(135deg, #0a1628 0%, #1a3a6e 100%);">
+          <div class="sample-doc-badge">📝 Service Agreement</div>
+          <h3 class="sample-card-title">TechSolutions Inc. ↔ Acme Corp</h3>
+          <p class="sample-card-date">Analyzed · 12 clauses detected</p>
+        </div>
+        <div class="sample-clauses">
+          <div class="sample-clause-chip chip-blue">
+            <span class="chip-label">Party Names</span>
+            <span class="chip-value">Acme Corp · TechSolutions Inc</span>
+          </div>
+          <div class="sample-clause-chip chip-gold">
+            <span class="chip-label">Payment Amount</span>
+            <span class="chip-value">$5,000 / month</span>
+          </div>
+          <div class="sample-clause-chip chip-purple">
+            <span class="chip-label">Governing Law</span>
+            <span class="chip-value">State of New York</span>
+          </div>
+          <div class="sample-clause-chip chip-green">
+            <span class="chip-label">Effective Date</span>
+            <span class="chip-value">January 1, 2025</span>
+          </div>
+          <div class="sample-clause-chip chip-orange">
+            <span class="chip-label">Expiry Date</span>
+            <span class="chip-value">December 31, 2025</span>
+          </div>
+          <div class="sample-ner-row">
+            <span class="ner-tag org">ORG ×2</span>
+            <span class="ner-tag date">DATE ×3</span>
+            <span class="ner-tag money">MONEY ×1</span>
+            <span class="ner-tag gpe">GPE ×1</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 2: NDA -->
+      <div class="sample-card reveal" id="sample-card-2">
+        <div class="sample-card-header" style="background: linear-gradient(135deg, #1a0a28 0%, #4a1a6e 100%);">
+          <div class="sample-doc-badge">🔒 Non-Disclosure Agreement</div>
+          <h3 class="sample-card-title">GlobalMedia Ltd ↔ DataPulse LLC</h3>
+          <p class="sample-card-date">Analyzed · 9 clauses detected</p>
+        </div>
+        <div class="sample-clauses">
+          <div class="sample-clause-chip chip-red">
+            <span class="chip-label">Confidentiality</span>
+            <span class="chip-value">5-year mutual NDA · All proprietary data</span>
+          </div>
+          <div class="sample-clause-chip chip-green">
+            <span class="chip-label">Effective Date</span>
+            <span class="chip-value">March 15, 2025</span>
+          </div>
+          <div class="sample-clause-chip chip-teal">
+            <span class="chip-label">Termination</span>
+            <span class="chip-value">60 days written notice</span>
+          </div>
+          <div class="sample-clause-chip chip-blue">
+            <span class="chip-label">Party Names</span>
+            <span class="chip-value">GlobalMedia Ltd · DataPulse LLC</span>
+          </div>
+          <div class="sample-clause-chip chip-purple">
+            <span class="chip-label">Governing Law</span>
+            <span class="chip-value">Delaware, United States</span>
+          </div>
+          <div class="sample-ner-row">
+            <span class="ner-tag org">ORG ×2</span>
+            <span class="ner-tag date">DATE ×4</span>
+            <span class="ner-tag money">MONEY ×0</span>
+            <span class="ner-tag gpe">GPE ×1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CHART ═══════════════ -->
+<section class="chart-section" id="chart">
+  <div class="section-container">
+    <div class="section-label">— Benchmark Accuracy —</div>
+    <h2 class="section-title">Clause Detection Accuracy</h2>
+    <p class="section-sub">Detection rates on the CUAD evaluation set across all 8 supported clause types.</p>
+    <div class="chart-wrapper reveal" id="chart-wrapper">
+      <div class="chart-bar-row" data-pct="92" data-color="var(--blue)">
+        <span class="chart-label">Party Names</span>
+        <div class="chart-bar-track"><div class="chart-bar" style="background: var(--blue);"></div></div>
+        <span class="chart-pct">92%</span>
+      </div>
+      <div class="chart-bar-row" data-pct="88" data-color="var(--green)">
+        <span class="chart-label">Effective Date</span>
+        <div class="chart-bar-track"><div class="chart-bar" style="background: var(--green);"></div></div>
+        <span class="chart-pct">88%</span>
+      </div>
+      <div class="chart-bar-row" data-pct="81" data-color="var(--orange)">
+        <span class="chart-label">Expiry Date</span>
+        <div class="chart-bar-track"><div class="chart-bar" style="background: var(--orange);"></div></div>
+        <span class="chart-pct">81%</span>
+      </div>
+      <div class="chart-bar-row" data-pct="85" data-color="var(--gold)">
+        <span class="chart-label">Payment Amount</span>
+        <div class="chart-bar-track"><div class="chart-bar" style="background: var(--gold);"></div></div>
+        <span class="chart-pct">85%</span>
+      </div>
+      <div class="chart-bar-row" data-pct="79" data-color="var(--purple)">
+        <span class="chart-label">Governing Law</span>
+        <div class="chart-bar-track"><div class="chart-bar" style="background: var(--purple);"></div></div>
+        <span class="chart-pct">79%</span>
+      </div>
+      <div class="chart-bar-row" data-pct="74" data-color="var(--red)">
+        <span class="chart-label">Confidentiality Clause</span>
+        <div class="chart-bar-track"><div class="chart-bar" style="background: var(--red);"></div></div>
+        <span class="chart-pct">74%</span>
+      </div>
+      <div class="chart-bar-row" data-pct="77" data-color="var(--teal)">
+        <span class="chart-label">Termination Clause</span>
+        <div class="chart-bar-track"><div class="chart-bar" style="background: var(--teal);"></div></div>
+        <span class="chart-pct">77%</span>
+      </div>
+      <div class="chart-bar-row" data-pct="68" data-color="var(--navy-mid)">
+        <span class="chart-label">Obligations</span>
+        <div class="chart-bar-track"><div class="chart-bar" style="background: var(--navy-mid);"></div></div>
+        <span class="chart-pct">68%</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TECH STACK ═══════════════ -->
+<section class="tech-section" id="tech-stack">
+  <div class="section-container">
+    <div class="section-label">— Under the Hood —</div>
+    <h2 class="section-title">Tech Stack</h2>
+    <p class="section-sub">Built on industry-proven NLP tools and legal domain datasets.</p>
+    <div class="tech-grid">
+      <div class="tech-card reveal" id="tech-python">
+        <div class="tech-icon">🐍</div>
+        <div class="tech-name">Python</div>
+        <div class="tech-desc">Core language for NLP pipeline and contract processing logic</div>
+      </div>
+      <div class="tech-card reveal" id="tech-spacy">
+        <div class="tech-icon">🧠</div>
+        <div class="tech-name">spaCy</div>
+        <div class="tech-desc">Industrial-strength NLP library for named entity recognition</div>
+      </div>
+      <div class="tech-card reveal" id="tech-regex">
+        <div class="tech-icon">🔍</div>
+        <div class="tech-name">Regex NLP</div>
+        <div class="tech-desc">Domain-specific pattern matching for legal clause structures</div>
+      </div>
+      <div class="tech-card reveal" id="tech-cuad">
+        <div class="tech-icon">📚</div>
+        <div class="tech-name">CUAD Dataset</div>
+        <div class="tech-desc">Contract Understanding Atticus Dataset with 13,000+ legal contracts</div>
+      </div>
+      <div class="tech-card reveal" id="tech-pandas">
+        <div class="tech-icon">🐼</div>
+        <div class="tech-name">Pandas</div>
+        <div class="tech-desc">Data wrangling and structured output formatting</div>
+      </div>
+      <div class="tech-card reveal" id="tech-model">
+        <div class="tech-icon">⚙️</div>
+        <div class="tech-name">en_core_web_sm</div>
+        <div class="tech-desc">spaCy's English NER model trained on OntoNotes 5 corpus</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-brand">
+      <span class="logo-icon">⚖️</span>
+      <span class="logo-text">Lex<span class="logo-accent">AI</span></span>
+    </div>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Project</h4>
+        <p>Contract Analysis System</p>
+      </div>
+      <div class="footer-col">
+        <h4>Course</h4>
+        <p>Natural Language Processing</p>
+      </div>
+      <div class="footer-col">
+        <h4>Inspired By</h4>
+        <p>JPMorgan NLP Pipeline</p>
+      </div>
+      <div class="footer-col">
+        <h4>Submission Date</h4>
+        <p>27 March 2026</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <a href="#" class="footer-github" id="footer-github">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.303 3.438 9.8 8.205 11.387.6.111.82-.261.82-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.218.694.825.576C20.565 21.796 24 17.303 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        View on GitHub
+      </a>
+      <p class="footer-copy">© 2026 LexAI · Contract Analysis System · NLP Course Project</p>
+    </div>
+  </div>
+</footer>
+
+<link rel="stylesheet" href="style.css" />
+<script src="app.js"></script>
+</body>
+</html>

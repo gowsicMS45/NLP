@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Financial News Summarizer | AI-Powered Briefings</title>
+  <meta name="description" content="Condense financial news into clear, instant briefings using AI-powered summarization with ROUGE evaluation metrics." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <span class="logo-icon">&#9650;</span>
+        <span class="logo-text">FinBrief<span class="logo-accent">AI</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#summarizer">Summarize</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#samples">Samples</a></li>
+        <li><a href="#stack">Tech Stack</a></li>
+      </ul>
+      <button class="nav-cta" onclick="document.getElementById('summarizer').scrollIntoView({behavior:'smooth'})">Try It Free</button>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="#summarizer">Summarize</a>
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#samples">Samples</a>
+      <a href="#stack">Tech Stack</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-bg">
+      <div class="hero-grid"></div>
+      <div class="hero-orb hero-orb-1"></div>
+      <div class="hero-orb hero-orb-2"></div>
+    </div>
+    <div class="container hero-content">
+      <div class="hero-badge reveal">
+        <span class="badge-dot"></span>
+        NLP Project &mdash; BART + ROUGE Evaluation
+      </div>
+      <h1 class="hero-title reveal">
+        Financial News<br />
+        <span class="gradient-text">Summarizer</span>
+      </h1>
+      <p class="hero-tagline reveal">
+        Condense financial news into clear, instant briefings.<br />
+        Powered by BART and evaluated with ROUGE metrics.
+      </p>
+      <div class="hero-actions reveal">
+        <button class="btn-primary" onclick="document.getElementById('summarizer').scrollIntoView({behavior:'smooth'})">
+          Start Summarizing
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <button class="btn-ghost" onclick="document.getElementById('samples').scrollIntoView({behavior:'smooth'})">View Samples</button>
+      </div>
+      <div class="hero-stats reveal">
+        <div class="stat">
+          <span class="stat-num">BART</span>
+          <span class="stat-label">Model</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">CNN/DM</span>
+          <span class="stat-label">Dataset</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">ROUGE</span>
+          <span class="stat-label">Evaluation</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">
+      <div class="scroll-dot"></div>
+    </div>
+  </section>
+
+  <!-- SUMMARIZER TOOL -->
+  <section class="summarizer-section" id="summarizer">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Live Demo</span>
+        <h2 class="section-title">Try the Summarizer</h2>
+        <p class="section-sub">Paste any financial news article below and receive a concise AI-generated summary with accuracy metrics.</p>
+      </div>
+
+      <div class="summarizer-card reveal">
+        <div class="summarizer-toolbar">
+          <span class="toolbar-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Article Input
+          </span>
+          <button class="toolbar-clear" id="clearBtn" onclick="clearInput()">Clear</button>
+        </div>
+        <textarea
+          id="articleInput"
+          class="article-textarea"
+          placeholder="Paste your financial news article here...&#10;&#10;Example: 'The Federal Reserve on Wednesday raised its benchmark interest rate by 25 basis points, bringing the federal funds rate to a target range of 5.25% to 5.5%, the highest in 22 years. Fed Chair Jerome Powell said the central bank remains committed to bringing inflation down to its 2% target...'"
+          rows="10"
+        ></textarea>
+        <div class="summarizer-footer">
+          <span class="char-count" id="charCount">0 characters</span>
+          <button class="btn-summarize" id="summarizeBtn" onclick="summarize()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Summarize
+          </button>
+        </div>
+      </div>
+
+      <!-- RESULT CARD -->
+      <div class="result-card reveal" id="resultCard" style="display:none;">
+        <div class="result-header">
+          <div class="result-title-row">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            <span>Generated Summary</span>
+          </div>
+          <div class="rouge-badges" id="rougeBadges"></div>
+        </div>
+        <div class="result-body" id="summaryOutput"></div>
+        <div class="result-actions">
+          <button class="result-btn" onclick="copySummary()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+          <button class="result-btn" onclick="resetSummarizer()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.17"/></svg>
+            New Article
+          </button>
+        </div>
+      </div>
+
+      <!-- LOADING STATE -->
+      <div class="loading-card" id="loadingCard" style="display:none;">
+        <div class="loading-pulse">
+          <div class="pulse-ring"></div>
+          <div class="pulse-ring pulse-ring-2"></div>
+          <div class="pulse-core">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+        </div>
+        <p class="loading-text">Analyzing article with BART model<span class="loading-dots"></span></p>
+        <p class="loading-sub">Computing ROUGE scores against CNN/DailyMail benchmark</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features-section" id="features">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Features</span>
+        <h2 class="section-title">Built for Financial Analysts</h2>
+        <p class="section-sub">Everything you need to quickly digest financial news without losing critical detail.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <h3 class="feature-title">Paste Any Article</h3>
+          <p class="feature-desc">Works with any financial news source — Reuters, Bloomberg, WSJ, CNBC, and more. Simply copy and paste the full article text.</p>
+          <ul class="feature-list">
+            <li>No account required</li>
+            <li>Handles long articles</li>
+            <li>Instant processing</li>
+          </ul>
+        </div>
+        <div class="feature-card feature-card-highlight reveal">
+          <div class="feature-card-glow"></div>
+          <div class="feature-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <h3 class="feature-title">AI-Powered Summary</h3>
+          <p class="feature-desc">Powered by Facebook's BART-large-CNN model, fine-tuned on the CNN/DailyMail dataset to produce human-quality abstractive summaries.</p>
+          <ul class="feature-list">
+            <li>BART-large-CNN model</li>
+            <li>Abstractive summarization</li>
+            <li>Context-aware output</li>
+          </ul>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><path d="M3 3l18 18"/></svg>
+          </div>
+          <h3 class="feature-title">Accuracy Metrics</h3>
+          <p class="feature-desc">Every summary is evaluated with ROUGE-1, ROUGE-2, and ROUGE-L scores, giving you transparent quality metrics used by NLP researchers.</p>
+          <ul class="feature-list">
+            <li>ROUGE-1 unigram recall</li>
+            <li>ROUGE-2 bigram precision</li>
+            <li>ROUGE-L longest match</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section" id="how-it-works">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Process</span>
+        <h2 class="section-title">How It Works</h2>
+        <p class="section-sub">Three simple steps from raw article to polished briefing.</p>
+      </div>
+      <div class="steps-container">
+        <div class="steps-line"></div>
+        <div class="step reveal">
+          <div class="step-number">01</div>
+          <div class="step-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </div>
+          <div class="step-content">
+            <h3 class="step-title">Paste Your Article</h3>
+            <p class="step-desc">Copy any financial news article from the web and paste it into the input field. The model accepts articles of any length.</p>
+          </div>
+        </div>
+        <div class="step-connector reveal"></div>
+        <div class="step reveal">
+          <div class="step-number">02</div>
+          <div class="step-icon step-icon-gold">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          </div>
+          <div class="step-content">
+            <h3 class="step-title">AI Summarization</h3>
+            <p class="step-desc">The BART model processes your text using transformer-based encoder-decoder architecture, generating a concise abstractive summary.</p>
+          </div>
+        </div>
+        <div class="step-connector reveal"></div>
+        <div class="step reveal">
+          <div class="step-number">03</div>
+          <div class="step-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="step-content">
+            <h3 class="step-title">Get Your Briefing</h3>
+            <p class="step-desc">Receive a clear, concise summary alongside ROUGE-1, ROUGE-2, and ROUGE-L evaluation scores measuring summary quality.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SAMPLE RESULTS -->
+  <section class="samples-section" id="samples">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Examples</span>
+        <h2 class="section-title">Sample Results</h2>
+        <p class="section-sub">See how FinBriefAI distills complex financial articles into sharp, actionable summaries.</p>
+      </div>
+      <div class="samples-grid">
+
+        <div class="sample-card reveal">
+          <div class="sample-header">
+            <span class="sample-tag">Federal Reserve</span>
+            <div class="sample-rouge-chips">
+              <span class="rouge-chip">R-1: 0.48</span>
+              <span class="rouge-chip">R-2: 0.22</span>
+              <span class="rouge-chip rouge-chip-gold">R-L: 0.44</span>
+            </div>
+          </div>
+          <div class="sample-body">
+            <div class="sample-col">
+              <div class="sample-col-label">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                Original Article
+              </div>
+              <p class="sample-text">The Federal Reserve raised its benchmark interest rate by a quarter percentage point on Wednesday, lifting it to the highest level in 22 years as policymakers continued their fight against persistent inflation. The move brought the federal funds rate to a target range of 5.25% to 5.50%. Fed Chair Jerome Powell noted that while inflation has eased from its peak, it remains well above the central bank's 2% target. Powell suggested the Fed could hike again in September if economic data warrants it, though he left the door open for a pause...</p>
+            </div>
+            <div class="sample-divider"></div>
+            <div class="sample-col">
+              <div class="sample-col-label sample-col-label-gold">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                AI Summary
+              </div>
+              <p class="sample-text sample-text-summary">The Federal Reserve raised interest rates by 0.25 percentage points to a 22-year high of 5.25%–5.50%. Fed Chair Powell stated inflation remains above the 2% target and hinted at a possible further hike in September based on incoming data.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sample-card reveal">
+          <div class="sample-header">
+            <span class="sample-tag">Earnings Report</span>
+            <div class="sample-rouge-chips">
+              <span class="rouge-chip">R-1: 0.51</span>
+              <span class="rouge-chip">R-2: 0.26</span>
+              <span class="rouge-chip rouge-chip-gold">R-L: 0.47</span>
+            </div>
+          </div>
+          <div class="sample-body">
+            <div class="sample-col">
+              <div class="sample-col-label">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                Original Article
+              </div>
+              <p class="sample-text">Apple Inc. reported a revenue decline for the third consecutive quarter, with net sales falling 1% year-over-year to $81.8 billion. Despite the overall revenue miss, iPhone revenue came in stronger than expected at $39.7 billion. The company saw weakness in its Mac and iPad segments but reported record services revenue of $21.2 billion. CEO Tim Cook highlighted growth in emerging markets, particularly India, where revenue set a new all-time record. Apple guided for low single-digit revenue growth in the next quarter...</p>
+            </div>
+            <div class="sample-divider"></div>
+            <div class="sample-col">
+              <div class="sample-col-label sample-col-label-gold">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                AI Summary
+              </div>
+              <p class="sample-text sample-text-summary">Apple posted its third consecutive revenue decline, with net sales down 1% to $81.8B. iPhone revenue beat expectations while services hit a record $21.2B. CEO Tim Cook highlighted record performance in India and guided for low single-digit growth next quarter.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sample-card reveal">
+          <div class="sample-header">
+            <span class="sample-tag">Market Update</span>
+            <div class="sample-rouge-chips">
+              <span class="rouge-chip">R-1: 0.45</span>
+              <span class="rouge-chip">R-2: 0.19</span>
+              <span class="rouge-chip rouge-chip-gold">R-L: 0.41</span>
+            </div>
+          </div>
+          <div class="sample-body">
+            <div class="sample-col">
+              <div class="sample-col-label">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                Original Article
+              </div>
+              <p class="sample-text">Global equity markets tumbled on Thursday amid renewed concerns about the U.S. banking sector, as shares of several regional lenders fell sharply following the collapse of First Republic Bank. The S&amp;P 500 dropped 0.7%, the Dow Jones Industrial Average fell 286 points, and the Nasdaq Composite slid 0.5%. Treasury yields declined as investors sought safety in government bonds. The VIX volatility index spiked to its highest level in two months, reflecting rising market anxiety over potential contagion risks in the financial sector...</p>
+            </div>
+            <div class="sample-divider"></div>
+            <div class="sample-col">
+              <div class="sample-col-label sample-col-label-gold">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                AI Summary
+              </div>
+              <p class="sample-text sample-text-summary">Global markets fell sharply following First Republic Bank's collapse. The S&P 500 dropped 0.7%, the Dow lost 286 points, and the Nasdaq fell 0.5%. Treasury yields retreated and the VIX hit a two-month high amid banking contagion fears.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH STACK -->
+  <section class="stack-section" id="stack">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Technology</span>
+        <h2 class="section-title">Tech Stack</h2>
+        <p class="section-sub">Built with industry-standard NLP tools and frameworks used in production AI systems.</p>
+      </div>
+      <div class="stack-grid">
+        <div class="stack-badge reveal">
+          <div class="stack-icon stack-icon-blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          </div>
+          <span class="stack-name">Python</span>
+          <span class="stack-desc">Core Language</span>
+        </div>
+        <div class="stack-badge reveal">
+          <div class="stack-icon stack-icon-gold">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+          </div>
+          <span class="stack-name">BART Model</span>
+          <span class="stack-desc">Summarization</span>
+        </div>
+        <div class="stack-badge reveal">
+          <div class="stack-icon stack-icon-yellow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <span class="stack-name">Hugging Face</span>
+          <span class="stack-desc">Model Hub</span>
+        </div>
+        <div class="stack-badge reveal">
+          <div class="stack-icon stack-icon-green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <span class="stack-name">ROUGE Eval</span>
+          <span class="stack-desc">Metrics</span>
+        </div>
+        <div class="stack-badge reveal">
+          <div class="stack-icon stack-icon-purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <span class="stack-name">CNN/DailyMail</span>
+          <span class="stack-desc">Dataset</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="#" class="nav-logo footer-logo">
+            <span class="logo-icon">&#9650;</span>
+            <span class="logo-text">FinBrief<span class="logo-accent">AI</span></span>
+          </a>
+          <p class="footer-desc">An NLP project demonstrating advanced financial news summarization using transformer-based models evaluated with ROUGE metrics.</p>
+        </div>
+        <div class="footer-links">
+          <h4 class="footer-links-title">Navigation</h4>
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#summarizer">Summarizer</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#samples">Sample Results</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4 class="footer-links-title">Project Info</h4>
+          <ul>
+            <li><a href="#">Course: Natural Language Processing</a></li>
+            <li><a href="#">Model: BART-large-CNN</a></li>
+            <li><a href="#">Dataset: CNN/DailyMail</a></li>
+            <li><a href="#" class="footer-github">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+              GitHub Repository
+            </a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <p class="footer-copy">&copy; 2026 Financial News Summarizer &mdash; NLP Project</p>
+        <p class="footer-date">Submission Date: <strong>27 March 2026</strong></p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+
+  <script src="app.js"></script>
+</body>
+</html>
